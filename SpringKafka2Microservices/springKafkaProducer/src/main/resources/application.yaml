@@ -1,0 +1,10 @@
+server:
+  port: 9002
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+topic:
+  name: topic.secound.test
