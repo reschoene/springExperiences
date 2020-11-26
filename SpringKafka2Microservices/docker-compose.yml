@@ -23,7 +23,7 @@ services:
       - "moby:127.0.0.1"
       
   consumer:
-    image: kafka/spring-consumer
+    build: ./springKafkaConsumer
     network_mode: host
     depends_on:
       - kafka
@@ -31,7 +31,7 @@ services:
       - 9001:9001
       
   producer:
-    image: kafka/spring-producer
+    build: ./springKafkaProducer
     network_mode: host    
     depends_on:
       - kafka
