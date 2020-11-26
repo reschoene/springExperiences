@@ -5,15 +5,16 @@ import org.springframework.web.bind.annotation.*;
 import reschoene.springKafkaProducer.services.KafkaProducerService;
 
 @RestController
-@RequestMapping(value = "/kafka")
 @AllArgsConstructor
 public class KafkaProducerController
 {
     private final KafkaProducerService producerService;
 
-    @GetMapping(value = "/publish")
-    public void sendMessageToKafkaTopic(@RequestParam("message") String message)
+    @GetMapping(value = "/send")
+    public String sendMessage(@RequestParam("message") String message)
     {
         this.producerService.sendMessage(message);
+
+        return "Message " + message + " was send!!";
     }
 }
