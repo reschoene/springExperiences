@@ -11,12 +11,12 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class SecurityConfig {
     @Bean
-    PasswordEncoder getPasswordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
-    UserDetailsService getUserDetailsService() {
+    UserDetailsService userDetailsService() {
         var udm = new InMemoryUserDetailsManager();
 
         var u = User.builder()
