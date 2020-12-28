@@ -1,12 +1,14 @@
 package br.com.reschoene.springTests.repositories;
 
 import br.com.reschoene.springTests.entities.MovieEntity;
+import br.com.reschoene.springTests.util.MovieCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 
 @DataJpaTest
@@ -17,7 +19,7 @@ class MovieRepositoryTest {
     @Test
     @DisplayName("Save creates movie when successful")
     void save_CreateMovie_WhenSuccessful(){
-        var movie = createMovie();
+        var movie = MovieCreator.createMovieToBeSaved();
         var createdMovie = this.movieRepository.save(movie);
 
         Assertions.assertThat(createdMovie).isNotNull();
@@ -29,7 +31,7 @@ class MovieRepositoryTest {
     @Test
     @DisplayName("Save updates movie when successful")
     void save_UpdatesMovie_WhenSuccessful(){
-        var movie = createMovie();
+        var movie = MovieCreator.createMovieToBeSaved();
         var createdMovie = this.movieRepository.save(movie);
 
         Date dt = new Date();
@@ -47,7 +49,7 @@ class MovieRepositoryTest {
     @Test
     @DisplayName("Delete removes movie when successful")
     void delete_RemovesMovie_WhenSuccessful(){
-        var movie = createMovie();
+        var movie = MovieCreator.createMovieToBeSaved();
         var createdMovie = this.movieRepository.save(movie);
 
         this.movieRepository.delete(createdMovie);
@@ -59,7 +61,7 @@ class MovieRepositoryTest {
     @Test
     @DisplayName("Find by Title returns list of movies when successful")
     void findByTitle_ReturnsListOfMovies_WhenSuccessful(){
-        var movie = createMovie();
+        var movie = MovieCreator.createMovieToBeSaved();
         var createdMovie = this.movieRepository.save(movie);
 
         var movies = this.movieRepository.findByTitle(createdMovie.getTitle());
@@ -73,10 +75,13 @@ class MovieRepositoryTest {
         Assertions.assertThat(movies).isEmpty();
     }
 
-    private MovieEntity createMovie(){
-        var movieEntity = new MovieEntity();
-        movieEntity.setTitle("Inception");
-        movieEntity.setReleaseDate(new Date());
-        return movieEntity;
+    @Test
+    @DisplayName("Save throw ConstraintViolationException when title is empty")
+    void save_throwException_WhenTitleIsEmpty(){
+        var movie = new MovieEntity();
+
+        Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
+                .isThrownBy(() -> this.movieRepository.save(movie))
+                .withMessageContaining("The movie title cannot be empty");
     }
 }
