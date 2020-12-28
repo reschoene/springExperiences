@@ -44,14 +44,14 @@ public class MovieController {
         return new ResponseEntity<>(movieService.create(movie), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("movies/{id}")
-    public ResponseEntity<MovieEntity> delete(@PathVariable long id){
-        movieService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
     @PutMapping("movies")
     public ResponseEntity<MovieEntity> update(@RequestBody MovieEntity movie){
         return new ResponseEntity<>(movieService.update(movie), HttpStatus.OK);
+    }
+
+    @DeleteMapping("movies/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id){
+        movieService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

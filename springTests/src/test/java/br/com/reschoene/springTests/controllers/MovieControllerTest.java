@@ -8,10 +8,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +34,7 @@ public class MovieControllerTest {
     @BeforeEach
     void setUp(){
         var oneMovieList = List.of(MovieCreator.createMovieToBeSaved());
-        var moviePage = new PageImpl<MovieEntity>(oneMovieList);
+        var moviePage = new PageImpl<>(oneMovieList);
         BDDMockito.when(movieService.findAll(ArgumentMatchers.any()))
                 .thenReturn(moviePage);
 
@@ -42,6 +49,11 @@ public class MovieControllerTest {
 
         BDDMockito.when(movieService.create(ArgumentMatchers.any(MovieEntity.class)))
                 .thenReturn(MovieCreator.createMovieToBeSaved());
+
+        BDDMockito.when(movieService.update(ArgumentMatchers.any(MovieEntity.class)))
+                .thenReturn(MovieCreator.createValidUpdatedMovie());
+
+        BDDMockito.doNothing().when(movieService).delete(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -50,7 +62,9 @@ public class MovieControllerTest {
         String expectedTitle = MovieCreator.createMovieToBeSaved().getTitle();
         var moviePage = movieController.findAll(null).getBody();
 
-        Assertions.assertThat(moviePage).isNotEmpty();
+        Assertions.assertThat(moviePage)
+                .isNotNull()
+                .isNotEmpty();
 
         Assertions.assertThat(moviePage.toList()).isNotEmpty().hasSize(1);
 
@@ -63,16 +77,17 @@ public class MovieControllerTest {
         String expectedTitle = MovieCreator.createMovieToBeSaved().getTitle();
         var movieList = movieController.findAllNonPageable().getBody();
 
-        Assertions.assertThat(movieList).isNotEmpty();
-
-        Assertions.assertThat(movieList).isNotEmpty().hasSize(1);
+        Assertions.assertThat(movieList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1);
 
         Assertions.assertThat(movieList.get(0).getTitle()).isEqualTo(expectedTitle);
     }
 
     @Test
     @DisplayName("findById returns one movie when successful")
-    void findById_ReturnsOptionalMovie_WhenSuccessful(){
+    void findById_ReturnsMovie_WhenSuccessful(){
         long expectedId = MovieCreator.createValidMovie().getId();
         var movie = movieController.findById(expectedId).getBody();
 
@@ -82,6 +97,17 @@ public class MovieControllerTest {
                 .isNotNull()
                 .isEqualTo(expectedId);
     }
+
+    @Test
+    @DisplayName("findById Throws ResponseStatusException When Id Was Not Found")
+    void findById_ThrowsResponseStatusException_WhenIdNotFound(){
+        BDDMockito.when(movieService.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(ResponseStatusException.class)
+                .isThrownBy(() -> this.movieController.findById(-1))
+                .withMessageContaining("Movie not found");
+    }The movie title cannot be empty"
 
     @Test
     @DisplayName("findByTitle returns list of movies that matched a given title when successful")
@@ -115,6 +141,31 @@ public class MovieControllerTest {
         var savedMovie = movieController.create(movie).getBody();
 
         Assertions.assertThat(savedMovie).isNotNull();
-        Assertions.assertThat(savedMovie.getTitle()).isEqualTo(movie.getTitle());
+        Assertions.assertThat(savedMovie.getTitle())
+                .isNotEmpty()
+                .isEqualTo(movie.getTitle());
+    }
+
+    @Test
+    @DisplayName("update updates movie when successful")
+    void update_UpdatesMovie_WhenSuccessful(){
+        var movie = MovieCreator.createValidUpdatedMovie();
+        var updatedMovie = movieController.update(movie).getBody();
+
+        Assertions.assertThat(updatedMovie).isNotNull();
+        Assertions.assertThat(updatedMovie.getId()).isGreaterThan(0);
+        Assertions.assertThat(updatedMovie.getTitle()).isEqualTo(movie.getTitle());
+    }
+
+    @Test
+    @DisplayName("delete removes movie when successful")
+    void delete_RemovesMovie_WhenSuccessful(){
+        Assertions.assertThatCode(() -> movieController.delete(1)).doesNotThrowAnyException();
+
+        ResponseEntity<Void> response = movieController.delete(1);
+
+        Assertions.assertThat(response).isNotNull();
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
     }
 }
