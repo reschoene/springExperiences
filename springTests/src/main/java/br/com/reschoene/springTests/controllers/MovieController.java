@@ -22,7 +22,7 @@ public class MovieController {
         return new ResponseEntity<>(movieService.findAll(page), HttpStatus.OK);
     }
 
-    @GetMapping("/movies-all")
+    @GetMapping("/movies/all")
     ResponseEntity<List<MovieEntity>> findAllNonPageable() {
         return new ResponseEntity<>(movieService.findAllNonPageable(), HttpStatus.OK);
     }
@@ -34,8 +34,8 @@ public class MovieController {
         ), HttpStatus.OK);
     }
 
-    @GetMapping("/moviesByTitle/{title}")
-    ResponseEntity<List<MovieEntity>> findByTitle(@PathVariable String title) {
+    @GetMapping("/movies/find")
+    ResponseEntity<List<MovieEntity>> findByTitle(@RequestParam(name="title") String title) {
         return new ResponseEntity<>(movieService.findByTitle(title), HttpStatus.OK);
     }
 
