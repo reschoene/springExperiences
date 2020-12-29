@@ -1,4 +1,4 @@
-#Demo project for testing a REST API in an Spring Project
+# Demo project for testing a REST API in an Spring Project
 This project uses JUnit5 (https://junit.org/junit5/) as a testing framework, Mockito as a mock framework (https://site.mockito.org/) and Spring as a extension to the JUnit5 (SpringExtension).
 
 The integration tests was developed using SpringBootTest, which starts a complete spring context, allowing each test to be done over the entire solution.
