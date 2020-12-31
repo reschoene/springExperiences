@@ -1,16 +1,34 @@
-# Demo project for testing a REST API in an Spring Project
-This project uses JUnit5 (https://junit.org/junit5/) as a testing framework, Mockito as a mock framework (https://site.mockito.org/) and Spring as a extension to the JUnit5 (SpringExtension).
+# Demo project for testing a REST API using Spock and Spring Frameworks 
+In this project, I explored the use of Spock Framework for conducting 
+unit tests on my REST API developed using Spring Boot.
 
-The integration tests was developed using SpringBootTest, which starts a complete spring context, allowing each test to be done over the entire solution.
+Bellow are the steps for compiling the project, running the tests 
+and seeing statistics on SonaQube:
 
-The unit tests was conduct over the individual parts and its dependencies was mocked using mockito.
+### 1) start SonarQube at localhost:9000
+Open terminal in the project folder and type:
 
-### - To run all unit tests:
-`mvn test -Punit-tests`
+`docker-compose up`
 
-### - To run all integration tests:
-`mvn test -Pintegration-tests`
+Wait until "SonarQube is up" appears on the terminal.
 
-### - To run all tests:
-`mvn test -Pall-tests`
+### 2) compile and run all tests
+Open another terminal window and in the project folder type: 
+
+`mvn clean install`
+
+### 3) upload tests results to SonarQube:
+When project was successful build by the previous step, type:
+
+`mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=admin`
+
+### 4) Access sonar quality gate to see the tests results and coverage:
+Open a browser and type `http://localhost:9000`. SonarQube will ask for your credentials.
+The default username is `admin` and its password is `admin`. These are the credentials used as 
+parameters on the previous step command. So, if you change your credentials and need to run step 3 again 
+and change its parameters accordingly. 
+
+### 5) For stopping SonarQube local instance
+At the terminal window it was started, press `CTRL + c` for stopping it
+and then type `docker-compose down`
 
