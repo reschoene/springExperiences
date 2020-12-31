@@ -1,4 +1,4 @@
-package br.com.reschoene.springTests.wrappers;
+package br.com.reschoene.springtests.wrappers;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

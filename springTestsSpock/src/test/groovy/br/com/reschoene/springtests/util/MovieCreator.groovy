@@ -1,6 +1,6 @@
-package br.com.reschoene.springTests.util
+package br.com.reschoene.springtests.util
 
-import br.com.reschoene.springTests.entities.MovieEntity
+import br.com.reschoene.springtests.entities.MovieEntity
 
 class MovieCreator {
     static MovieEntity createMovieToBeSaved(){

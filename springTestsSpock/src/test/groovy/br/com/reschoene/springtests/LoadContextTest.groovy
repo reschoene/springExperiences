@@ -1,6 +1,6 @@
-package br.com.reschoene.springTests
+package br.com.reschoene.springtests
 
-import br.com.reschoene.springTests.controllers.MovieController
+import br.com.reschoene.springtests.controllers.MovieController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification

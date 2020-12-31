@@ -1,9 +1,10 @@
-package br.com.reschoene.springTests.entities;
+package br.com.reschoene.springtests.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 @Entity
@@ -15,7 +16,8 @@ public class MovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotEmpty(message = "The movie title cannot be empty")
+    @Column(nullable = false)
     private String title;
+
     private Date releaseDate;
 }

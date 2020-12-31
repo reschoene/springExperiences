@@ -1,7 +1,7 @@
-package br.com.reschoene.springTests.services;
+package br.com.reschoene.springtests.services;
 
-import br.com.reschoene.springTests.entities.MovieEntity;
-import br.com.reschoene.springTests.repositories.MovieRepository;
+import br.com.reschoene.springtests.entities.MovieEntity;
+import br.com.reschoene.springtests.repositories.MovieRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
