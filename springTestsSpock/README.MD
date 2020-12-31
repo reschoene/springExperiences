@@ -27,7 +27,10 @@ Open a browser and type `http://localhost:9000`. SonarQube will ask for your cre
 The default username is `admin` and its password is `admin`. These are the credentials used as 
 parameters on the previous step command. So, if you change your credentials and need to run step 3 again, change its parameters accordingly. 
 
-### 5) For stopping SonarQube local instance
+### 5) View generated spock test report
+Go to folder `./build/spock-reports` and open the file `index.html` to view the Spock test report. 
+
+### 6) For stopping SonarQube local instance
 At the terminal window it was started, press `CTRL + c` for stopping it
 and then type `docker-compose down`
 
