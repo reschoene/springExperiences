@@ -12,7 +12,7 @@ Open terminal in the project folder and type:
 
 Wait until "SonarQube is up" appears on the terminal.
 
-### 2) compile and run all tests
+### 2) download necessary packages, compile and run all tests (unit and integration tests)
 Open another terminal window and in the project folder type: 
 
 `mvn clean install`
@@ -27,10 +27,17 @@ Open a browser and type `http://localhost:9000`. SonarQube will ask for your cre
 The default username is `admin` and its password is `admin`. These are the credentials used as 
 parameters on the previous step command. So, if you change your credentials and need to run step 3 again, change its parameters accordingly. 
 
-### 5) View generated spock test report
+## Additional Possibilities
+* View generated spock test report
 Go to folder `./build/spock-reports` and open the file `index.html` to view the Spock test report. 
 
-### 6) For stopping SonarQube local instance
+* To run all unit tests:
+`mvn test`
+
+* To run integration and unit tests:
+`mvn integration-test`
+
+* For stopping SonarQube local instance
 At the terminal window it was started, press `CTRL + c` for stopping it
 and then type `docker-compose down`
 
