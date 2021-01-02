@@ -1,9 +1,9 @@
 package br.com.reschoene.springtests.services
 
-
 import br.com.reschoene.springtests.repositories.MovieRepository
 import br.com.reschoene.springtests.util.MovieCreator
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import spock.lang.Specification
 
 class MovieServiceTest extends Specification{
@@ -15,7 +15,8 @@ class MovieServiceTest extends Specification{
             def oneMovieList = [MovieCreator.createMovieToBeSaved()]
             def moviePage = new PageImpl<>(oneMovieList)
 
-            movieRepository.findAll(_) >> moviePage
+            Pageable nullPage = null
+            movieRepository.findAll(nullPage) >> moviePage
         when: "service receives a findAll request"
             def response = movieService.findAll(null)
 
@@ -40,7 +41,7 @@ class MovieServiceTest extends Specification{
     def "Find by id returns one movie"() {
         given: "repository's findById method returns one movie"
             def movie = MovieCreator.createMovieToBeSaved()
-            movieRepository.findById(_) >> Optional.of(movie)
+            movieRepository.findById(1) >> Optional.of(movie)
         when: "service receives a findById call"
             def response = movieService.findById(1)
         then: "returns a list containing one movie"
@@ -52,9 +53,9 @@ class MovieServiceTest extends Specification{
     def "Find by title returns a list of movies that matched a given title"(){
         given: "repository's findByTile method returns a list with one movie"
            def movie = MovieCreator.createMovieToBeSaved()
-            movieRepository.findByTitle(_) >> [movie]
+            movieRepository.findByTitle(movie.title) >> [movie]
         when: "service receives a findByTitle call"
-            def response = movieService.findByTitle("test")
+            def response = movieService.findByTitle(movie.title)
         then: "returns a list containing the searched movie"
             response
             response.size == 1
@@ -64,7 +65,7 @@ class MovieServiceTest extends Specification{
     def "Create inserts a new movie and return it"(){
         given: "repository's create method returns a movie"
             def movieEntity = MovieCreator.createMovieToBeSaved()
-            movieRepository.save(_) >> movieEntity
+            movieRepository.save(movieEntity) >> movieEntity
         when: "service receives a create call"
             def response = movieService.create(movieEntity)
         then: "returns the movie that was inserted"
@@ -76,7 +77,7 @@ class MovieServiceTest extends Specification{
     def "Update updates a given movie and return it"(){
         given: "repository's create method returns a movie"
             def movieEntity = MovieCreator.createValidUpdatedMovie()
-            movieRepository.save(_) >> movieEntity
+            movieRepository.save(movieEntity) >> movieEntity
         when: "service receives a update call"
             def response = movieService.update(movieEntity)
         then: "returns the movie that was updated"
@@ -87,7 +88,7 @@ class MovieServiceTest extends Specification{
     def "Delete does not throw any exception"(){
         given: "repository's findById method returns a movieEntity"
             def movieEntity = MovieCreator.createValidMovie()
-            movieRepository.findById(_) >> Optional.of(movieEntity)
+            movieRepository.findById(1) >> Optional.of(movieEntity)
         when: "service receives a delete call for a given id"
             movieService.delete(1)
         then: "no exception was thrown and repository's delete method was called a once"
